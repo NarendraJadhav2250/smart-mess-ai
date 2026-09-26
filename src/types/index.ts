@@ -1,0 +1,1 @@
+﻿export type MealRecord={date:string;weekday:string;meal:string;menu:string;totalHostelStudents:number;expectedStudents:number;isCollegeDay:boolean;isHoliday:boolean;preparedQuantity:number;consumedQuantity:number;predictedDemand:number}

@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         String   @default("MESS_MANAGER")
+  createdAt    DateTime @default(now())
+  @@map("users")
+}
+model MenuMaster {
+  id        String   @id @default(cuid())
+  day       String   @unique
+  lunch     String
+  dinner    String
+  createdAt DateTime @default(now())
+  @@map("menu_master")
+}
+model Holiday {
+  id        String   @id @default(cuid())
+  date      DateTime @unique
+  name      String
+  createdAt DateTime @default(now())
+  @@map("holidays")
+}
+model Meal {
+  id               String      @id @default(cuid())
+  date             DateTime
+  day              String
+  mealType         String
+  menu             String
+  hostelStudents   Int
+  expectedStudents Int
+  holiday          Boolean     @default(false)
+  collegeStatus    String
+  event            String      @default("")
+  notes             String      @default("")
+  createdAt        DateTime    @default(now())
+  result           MealResult?
+  @@index([date])
+  @@index([menu])
+  @@map("meals")
+}
+model MealResult {
+  id                   String   @id @default(cuid())
+  mealId               String   @unique
+  predictedConsumption Int
+  recommendedQuantity  Int
+  preparedQuantity     Int
+  consumedQuantity     Int
+  waste                Int
+  shortage             Int
+  wastePercentage      Float
+  predictionError      Int
+  createdAt            DateTime @default(now())
+  meal                 Meal     @relation(fields: [mealId], references: [id], onDelete: Cascade)
+  @@map("meal_results")
+}

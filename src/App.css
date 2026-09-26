@@ -28,3 +28,144 @@
 .insights-page{padding-top:27px;padding-bottom:32px}.insights-heading{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:18px}.insights-heading h1{font-size:24px;letter-spacing:-.6px;margin:8px 0 4px}.insights-heading p{font-size:11px;color:#8993a1;margin:0;line-height:1.5}.insights-data-chip{display:flex;align-items:center;gap:6px;padding:8px 10px;border-radius:20px;background:#edf5ef;color:#63816e;font-size:9px;white-space:nowrap}.insights-overview{display:flex;align-items:center;gap:12px;padding:13px 16px;margin-bottom:13px;border:1px solid #e2ebe4;border-radius:10px;background:linear-gradient(105deg,#f3f8f4,#fff)}.insights-overview-icon{width:35px;height:35px;display:grid;place-items:center;flex:none;border-radius:10px;background:#e3f0e6;color:#39835d}.insights-overview>div:nth-child(2){display:grid;gap:3px;flex:1}.insights-overview>div:nth-child(2)>small{font-size:8px;letter-spacing:.9px;font-weight:750;color:#809184}.insights-overview>div:nth-child(2)>b{font-size:12px;color:#345744}.insights-overview>div:nth-child(2)>span{font-size:9px;color:#89948d}.overview-check{width:8px;height:8px;border-radius:50%;background:#5b9a72;box-shadow:0 0 0 4px #e6f2e9}.insight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}.insight-card{min-width:0;padding:15px 15px 13px;display:flex;flex-direction:column;min-height:205px}.insight-card-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}.insight-card-top>i{width:32px;height:32px;display:grid;place-items:center;border-radius:9px;background:#edf5f0;color:#4a8966;font-style:normal}.insight-card-top>span{padding:5px 8px;border-radius:15px;background:#f1f4f2;color:#748078;font-size:8px;font-weight:650}.insight-eyebrow{font-size:7px;letter-spacing:.9px;color:#8d9991;font-weight:750}.insight-card h2{font-size:13px;line-height:1.35;color:#304156;margin:5px 0 6px}.insight-card>p{font-size:9px;line-height:1.55;color:#7f8a85;margin:0 0 12px}.insight-metric{display:grid;gap:3px;border-top:1px solid #edf0ee;padding-top:9px;margin-top:auto}.insight-metric>b{font-size:11px;color:#4b6252}.insight-metric>small{font-size:8px;color:#9aa39f}.insight-amber .insight-card-top>i{background:#fbf2e6;color:#ae8048}.insight-amber .insight-card-top>span{background:#fbf2e6;color:#9d743f}.insight-rose .insight-card-top>i{background:#f9eeec;color:#ae6a60}.insight-rose .insight-card-top>span{background:#f9eeec;color:#a36158}.insight-blue .insight-card-top>i{background:#edf3f9;color:#6883a1}.insight-blue .insight-card-top>span{background:#edf3f9;color:#617c99}.insight-green .insight-card-top>i{background:#eaf4ef;color:#4d8964}.insight-green .insight-card-top>span{background:#eaf4ef;color:#548064}.insight-slate .insight-card-top>i{background:#f0f2f2;color:#7a8981}.insight-slate .insight-card-top>span{background:#f0f2f2;color:#78847e}.insights-footer{font-size:8px;color:#99a19c;margin:12px 2px 0}
 @media(max-width:950px){.insight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.insight-card{min-height:190px}}
 @media(max-width:600px){.insights-page{padding:20px 14px}.insights-heading{align-items:flex-start}.insights-heading h1{font-size:21px}.insights-heading p{max-width:310px}.insights-data-chip{font-size:0;padding:8px}.insights-data-chip svg{width:16px;height:16px}.insights-overview{align-items:flex-start;padding:12px}.insights-overview>div:nth-child(2)>span{line-height:1.45}.overview-check{margin:6px 3px}.insight-grid{grid-template-columns:1fr}.insight-card{min-height:unset}.insight-card>p{font-size:10px}}
+/* Shared projector-friendly Smart Mess operations theme. */
+:root{--ink:#14243b;--text:#263b54;--muted:#586a80;--muted-soft:#69798d;--navy:#17365c;--teal:#0f766e;--emerald:#16804b;--amber:#a96512;--red:#b4232d;--canvas:#f1f5f9;--card:#fff;--border:#dbe4ed}
+body{background:var(--canvas);color:var(--ink)}
+.card,aside,header{background-color:var(--card);border-color:var(--border)}
+aside{background:#fff}
+nav a,.sidebottom>a{color:#34465e;font-size:15px;font-weight:550}
+nav a.active{background:#e4f3ef;color:#115e59;font-weight:700}
+nav a svg,.sidebottom>a svg{color:#405a78}
+.brand b{font-size:16px;color:var(--ink)}
+.brand small,.profile small{font-size:12px;color:var(--muted)}
+.caption,.eyebrow{font-size:12px;color:#566980}
+header{color:#52647a;font-size:14px}
+header b{color:var(--ink)}
+.content{color:var(--text)}
+.welcome h1,.content>h1,.planning-heading h1,.recommendation-page-heading h1,.consumption-heading h1,.records-heading h1,.insights-heading h1{font-size:30px;font-weight:700;letter-spacing:-.45px;color:var(--ink)}
+.welcome p,.section-title p,.chart p,.content>p,.planning-heading p,.insights-heading p{font-size:15px;color:var(--muted);line-height:1.55}
+.button,.planning-submit,.consumption-save{font-size:15px;font-weight:650;background:#145c72;color:#fff}
+.button:hover,.planning-submit:hover,.consumption-save:hover{background:#104b5d}
+.kpi{padding:18px}
+.kpi>div,.analytics-kpi-top{font-size:15px;color:#44566d;font-weight:600}
+.kpi i{background:#e8f1f7;color:#1f5674}
+.kpi strong{font-size:34px;font-weight:750;color:var(--navy);font-variant-numeric:tabular-nums}
+.kpi strong small{font-size:14px;color:var(--muted);font-weight:500}
+.kpi p{font-size:13px;color:var(--muted);line-height:1.45}
+.section-title h2,.chart h2,.dashboard-card-heading h2{font-size:21px;font-weight:650;color:var(--ink)}
+.section-title p,.dashboard-card-heading p{font-size:14px;color:var(--muted)}
+.dashboard-date{font-size:14px;color:#344a63;border-color:var(--border)}
+.dashboard-live{font-size:13px;color:#145e49;background:#e7f4ed}
+.meal-polished{padding:19px}
+.meal-topline,.meal-time{font-size:13px;color:#4d6077}
+.meal label.status-recorded,.meal label.status-planned{font-size:13px;padding:5px 10px;font-weight:700}
+.meal label.status-recorded{color:#166534;background:#e7f5eb}
+.meal label.status-planned{color:#854d0e;background:#fff2d9}
+.meal-food>i{background:#e8f2f3;color:var(--teal)}
+.meal-food small{font-size:12px;color:#52677e}
+.meal-food h3{font-size:21px;color:var(--ink)}
+.meal-stats span{font-size:14px;color:var(--muted)}
+.meal-stats b{font-size:16px;color:#233a55}
+.meal-stats b small{font-size:13px;color:var(--muted)}
+.meal-stats b svg{color:var(--teal)}
+.meal-record{padding:9px 11px;background:#f1f5f9;color:#40536a;font-size:13px;line-height:1.45}
+.dashboard-card-heading p,.chart-period,.chart-legend{font-size:13px;color:#53657a}
+.chart-legend{font-size:13px}
+.waste-heading h2{font-size:17px;color:var(--ink)}
+.waste-heading small,.waste-caption,.waste-breakdown,.waste-note{font-size:13px;color:#52647a}
+.waste-total{font-size:32px;color:#166534}
+.waste-total small{font-size:14px;color:#52647a}
+.waste-breakdown b,.waste-note b{color:#293d55}
+.quick-action{font-size:14px;color:#34465e}
+.quick-action>i{background:#e8f1f7;color:#1c5872}
+.dashboard-foot{font-size:12px;color:#53667c}
+.planning-local,.insights-data-chip{font-size:13px;color:#155e55;background:#e8f4f0}
+.planning-form,.schedule-card,.planning-info,.rec-summary,.rec-hero,.consumption-form,.consumption-help,.history-toolbar,.analytics-filterbar{border-color:var(--border)}
+.form-section-heading h2,.schedule-heading h2,.planning-info h2,.consumption-help h2{font-size:18px;color:var(--ink)}
+.form-section-heading p,.planning-info li,.schedule-card>p,.consumption-help>p{font-size:14px;color:var(--muted);line-height:1.55}
+.field{gap:8px}
+.field>span,.history-filter>span,.analytics-filterbar label span{font-size:14px;color:#344960;font-weight:650}
+.field input,.field select,.field textarea,.history-search input,.history-filter input,.history-filter select,.analytics-filterbar input,.analytics-filterbar select{font-size:15px;color:#203750;border-color:#cbd7e3}
+.field input,.field select,.field textarea{min-height:43px}
+.field input::placeholder,.field textarea::placeholder,.history-search input::placeholder{color:#68798d;opacity:1}
+.field>small{font-size:13px;color:#566980;line-height:1.45}
+.form-actions>span{font-size:13px;color:var(--muted)}
+.form-error{font-size:14px;color:#8f1d28;background:#fff0f0;border-color:#f0c8cc;line-height:1.45}
+.planning-submit{min-height:44px;padding:11px 16px;box-shadow:0 4px 12px #17365c24}
+.schedule-heading small,.planning-info>span{font-size:12px;color:#52677d}
+.schedule-row{font-size:14px;color:#52647a}
+.schedule-row b{font-size:15px;color:#203750}
+.recommendation-page-heading p,.rec-summary-grid b,.rec-summary-grid small,.rec-hero-copy p{font-size:15px;color:var(--text)}
+.rec-summary-title h2{font-size:20px;color:var(--ink)}
+.rec-quantity{font-size:38px;font-weight:750;color:var(--navy)}
+.rec-quantity span{font-size:16px;color:var(--muted)}
+.rec-section-heading h2,.consumption-result-heading h2{font-size:21px;color:var(--ink)}
+.rec-section-heading>span,.rec-stat span,.reason-row p,.rec-confidence-note,.flow-step small,.consumption-result-heading>span{font-size:13px;color:var(--muted)}
+.rec-stat b{font-size:25px;color:var(--navy)}
+.rec-stat small,.flow-step small,.rec-hero-copy>small{font-size:12px;color:#52677e}
+.flow-step b{font-size:16px;color:#1d334d}
+.confidence small{font-size:13px}
+.consumption-heading p{font-size:15px;color:var(--muted)}
+.consumption-context small{font-size:12px;color:#53677d}
+.consumption-context b{font-size:16px;color:#203750}
+.consumption-inputs .field>span{font-size:15px}
+.consumption-inputs input{font-size:17px}
+.consumption-save-row>span{font-size:13px;color:var(--muted)}
+.save-success{font-size:14px;color:#14532d;background:#e9f7ee;border-color:#b8e2c5}
+.consumption-help>div:not(.consumption-help-icon){font-size:13px;color:#40536a}
+.result-tile{padding:15px}
+.result-tile>small{font-size:12px;color:#53677d}
+.result-tile>b{font-size:29px;color:var(--navy)}
+.result-tile>span,.consumption-formula{font-size:13px;color:#53677d}
+.result-waste>b{color:#9a5b13}
+.result-shortage>b{color:#b4232d}
+.result-percent>b{color:#166534}
+.records-heading p{font-size:15px;color:var(--muted)}
+.records-heading>span{font-size:13px;color:#344a63}
+.history-toolbar,.analytics-filterbar{gap:12px;padding:14px}
+.history-search{height:42px;color:#52667e}
+.history-search input{font-size:14px}
+.history-filter input,.history-filter select,.analytics-filterbar input,.analytics-filterbar select{height:42px}
+.history-clear,.analytics-filterbar button{height:40px;font-size:14px;color:#155e55}
+.history-table-caption>span{font-size:14px;color:#314b66}
+.history-table-caption>small{font-size:12px;color:#5d6e82}
+.records-table th{font-size:12px;color:#3d526b;background:#eef3f8}
+.records-table td{font-size:14px;color:#354a63}
+.records-table td b{color:#1d334d}
+.history-meal{font-size:13px;color:#334c67}
+.history-badge{font-size:11px;padding:4px 7px}
+.history-empty b{font-size:15px}
+.history-empty span,.records-foot,.history-card .records-foot{font-size:13px;color:#53677d}
+.analytics-filter-title{font-size:14px;color:#344b64}
+.analytics-impact>div:nth-child(2)>small,.analytics-overview>div:first-child>small{font-size:12px;color:#52677d}
+.analytics-impact>div:nth-child(2)>b{font-size:17px;color:#173b5a}
+.analytics-impact>div:nth-child(2)>span,.analytics-overview p{font-size:13px;color:#53677d}
+.impact-rate strong{font-size:24px;color:#145c72}
+.impact-rate small{font-size:12px;color:#53677d}
+.analytics-dashboard-kpi{padding:16px}
+.analytics-kpi-top{font-size:14px;color:#3d526b}
+.analytics-dashboard-kpi>b{font-size:30px;color:var(--navy)}
+.analytics-dashboard-kpi>b small{font-size:13px;color:#53677d}
+.analytics-dashboard-kpi>p{font-size:13px;color:#53677d}
+.analytics-chart-heading h2{font-size:18px;color:#203750}
+.analytics-chart-heading p,.analytics-data-note{font-size:13px;color:#53677d;line-height:1.5}
+.insights-heading p{font-size:15px}
+.insights-overview>div:nth-child(2)>small{font-size:12px;color:#52677d}
+.insights-overview>div:nth-child(2)>b{font-size:17px;color:#173b5a}
+.insights-overview>div:nth-child(2)>span{font-size:13px;color:#53677d}
+.insight-card-top>span{font-size:12px}
+.insight-eyebrow{font-size:12px;color:#52677d}
+.insight-card h2{font-size:17px;color:#203750}
+.insight-card>p{font-size:14px;color:#4e6076;line-height:1.5}
+.insight-metric>b{font-size:15px;color:#314b66}
+.insight-metric>small,.insights-footer{font-size:12px;color:#596b80}
+.recharts-cartesian-axis-tick-value,.recharts-legend-item-text{font-size:12px!important;fill:#52647a!important;color:#52647a!important}
+.recharts-tooltip-wrapper{font-size:14px}
+@media(max-width:800px){.welcome h1,.content>h1,.planning-heading h1,.recommendation-page-heading h1,.consumption-heading h1,.records-heading h1,.insights-heading h1{font-size:28px}.kpi strong{font-size:30px}}
+@media(max-width:650px){.content{padding-inline:16px}.kpi{padding:14px}.kpi>div{font-size:13px}.kpi strong{font-size:28px}.kpi p{font-size:12px}.meal-stats b{font-size:15px}.quick-action{font-size:13px}.records-table th{font-size:12px}.records-table td{font-size:13px}.insight-card h2{font-size:16px}}
+header section small{font-size:14px;color:#52647a}
+.history-badge{font-size:12px}
+.history-empty span,.history-empty b{font-size:14px}
+.meal-stats span{line-height:1.4}
+.status-recorded{color:#166534}
+.status-planned{color:#854d0e}

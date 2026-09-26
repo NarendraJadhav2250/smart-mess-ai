@@ -2,17 +2,15 @@ import { useEffect, useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { CheckCircle2, ClipboardCheck, ClipboardList, Users, Utensils } from 'lucide-react'
 import type { MealPlanInput, MealPlanResult } from './MealPlanning'
-import { api, type ApiMeal } from '../services/api'
-import { mockHistory } from '../data/mockHistory'
-import { predictDemand } from '../utils/prediction'
-import { calculateShortage, calculateWaste } from '../utils/calculations'
+import { api, type ApiMeal, type ApiMealResult, type ApiPrediction } from '../services/api'
+import { calculatePredictionError, calculateShortage, calculateWaste } from '../utils/calculations'
 
-type Prediction = ReturnType<typeof predictDemand>
+type Prediction = { predictedDemand: number; recommendedQuantity: number; reasons: string[] }
 type MealContext = { mealId: string; plan: MealPlanInput; prediction: Prediction }
 function formatDate(date: string) {
   return new Date(date + 'T12:00:00').toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
 }
-function makeContext(meal: ApiMeal, prediction?: Prediction): MealContext {
+function makeContext(meal: ApiMeal, prediction: Prediction): MealContext {
   const date = meal.date.slice(0, 10)
   const plan: MealPlanInput = {
     date, weekday: meal.day, meal: meal.mealType, menu: meal.menu,
@@ -20,16 +18,13 @@ function makeContext(meal: ApiMeal, prediction?: Prediction): MealContext {
     dayStatus: meal.holiday ? 'Holiday' : meal.collegeStatus,
     event: meal.event, notes: meal.notes,
   }
-  const estimate = prediction ?? predictDemand({
-    menu: meal.menu,
-    weekday: meal.day,
-    expectedStudents: meal.expectedStudents,
-    isCollegeDay: meal.collegeStatus === 'College Day',
-    isHoliday: meal.holiday,
-    history: mockHistory,
-  })
-  return { mealId: meal.id, plan, prediction: estimate }
+  return { mealId: meal.id, plan, prediction }
 }
+const fromApiPrediction = (result: ApiPrediction): Prediction => ({
+  predictedDemand: result.predictedConsumption,
+  recommendedQuantity: result.recommendedQuantity,
+  reasons: [result.explanation],
+})
 const routeContext = (value: unknown): MealContext | null => {
   const state = value as (MealPlanResult & { mealId?: string }) | null
   return state?.mealId && state.mealPlan && state.prediction
@@ -45,11 +40,14 @@ export default function Consumption() {
   const [consumedValue, setConsumedValue] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [savedResult, setSavedResult] = useState<ApiMealResult | null>(null)
   const prepared = Number(preparedValue) || 0
   const consumed = Number(consumedValue) || 0
-  const waste = calculateWaste(prepared, consumed)
-  const shortage = calculateShortage(prepared, consumed)
-  const wastePercentage = prepared ? waste / prepared * 100 : 0
+  const waste = savedResult?.waste ?? calculateWaste(prepared, consumed)
+  const shortage = savedResult?.shortage ?? calculateShortage(prepared, consumed)
+  const wastePercentage = savedResult?.wastePercentage ?? (prepared ? waste / prepared * 100 : 0)
+  const predictionError = savedResult?.predictionError ?? calculatePredictionError(context?.prediction.predictedDemand ?? 0, consumed)
 
   useEffect(() => {
     const current = routeContext(location.state)
@@ -59,13 +57,14 @@ export default function Consumption() {
       return
     }
     let active = true
-    api.getMeals(1).then(meals => {
+    api.getMeals(1).then(async meals => {
       if (!active) return
       const latest = meals[0]
       if (latest) {
         const prediction = latest.result
           ? { predictedDemand: latest.result.predictedConsumption, recommendedQuantity: latest.result.recommendedQuantity, reasons: [] }
-          : undefined
+          : fromApiPrediction(await api.createPrediction(latest.id))
+        if (!active) return
         setContext(makeContext(latest, prediction))
       } else {
         setError('No meal plan is saved yet. Plan a meal before recording consumption.')
@@ -89,21 +88,26 @@ export default function Consumption() {
     }
     setError('')
     setSuccess(false)
+    setSavedResult(null)
+    setSaving(true)
     try {
-      await api.createMealResult({
+      const result = await api.createMealResult({
         mealId: context.mealId,
         predictedConsumption: context.prediction.predictedDemand,
         recommendedQuantity: context.prediction.recommendedQuantity,
         preparedQuantity: prepared,
         consumedQuantity: consumed,
       })
+      setSavedResult(result)
       setSuccess(true)
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Could not save the meal result.')
+    } finally {
+      setSaving(false)
     }
   }
-  const updatePrepared = (value: string) => { setPreparedValue(value); setSuccess(false); setError('') }
-  const updateConsumed = (value: string) => { setConsumedValue(value); setSuccess(false); setError('') }
+  const updatePrepared = (value: string) => { setPreparedValue(value); setSuccess(false); setSavedResult(null); setError('') }
+  const updateConsumed = (value: string) => { setConsumedValue(value); setSuccess(false); setSavedResult(null); setError('') }
 
   if (!context && !loadingContext) {
     return <div className="content consumption-content">
@@ -133,8 +137,8 @@ export default function Consumption() {
           <label className="field"><span>Food prepared <b>*</b></span><div className="input-with-icon"><ClipboardList size={16}/><input type="number" min="0" step="1" inputMode="numeric" placeholder="Enter portions prepared" value={preparedValue} onChange={event => updatePrepared(event.target.value)} required/></div><small>Total portions made for this service.</small></label>
           <label className="field"><span>Food consumed <b>*</b></span><div className="input-with-icon"><Users size={16}/><input type="number" min="0" step="1" inputMode="numeric" placeholder="Enter portions consumed" value={consumedValue} onChange={event => updateConsumed(event.target.value)} required/></div><small>Total portions served and consumed.</small></label>
         </div>
-        <div className="consumption-save-row"><span><b>*</b> Required fields</span><button className="button consumption-save" type="submit"><CheckCircle2 size={16}/>Save Meal Result</button></div>
-        {success&&<div className="save-success" role="status"><CheckCircle2 size={17}/><span><b>Meal result saved.</b> It is now stored in the database and available through the History API.</span></div>}
+        <div className="consumption-save-row"><span><b>*</b> Required fields</span><button className="button consumption-save" type="submit" disabled={saving}><CheckCircle2 size={16}/>{saving?'Saving result…':'Save Meal Result'}</button></div>
+        {success&&<div className="save-success" role="status"><CheckCircle2 size={17}/><span><b>Meal result saved.</b> Waste: {waste} portions · shortage: {shortage} portions · waste: {wastePercentage.toFixed(2)}% · prediction error: {predictionError} portions.</span></div>}
       </form>
       <aside className="card consumption-help"><div className="consumption-help-icon"><Utensils size={18}/></div><h2>Close the feedback loop</h2><p>Actual meal results help the demand engine learn from what students really ate.</p><div><CheckCircle2 size={15}/> Waste and shortage are calculated on the server.</div><div><CheckCircle2 size={15}/> Saved in SQLite through the meal-results API.</div></aside>
     </div>

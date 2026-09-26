@@ -47,6 +47,7 @@ model Meal {
   result           MealResult?
   @@index([date])
   @@index([menu])
+  @@unique([date, mealType])
   @@map("meals")
 }
 model MealResult {

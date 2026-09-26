@@ -5,6 +5,7 @@ import mealResultsRouter from './routes/mealResults.js'
 import menuRouter from './routes/menu.js'
 import holidaysRouter from './routes/holidays.js'
 import historyRouter from './routes/history.js'
+import predictionsRouter from './routes/predictions.js'
 import { errorHandler, notFound } from './middleware/errorHandler.js'
 
 export const app = express()
@@ -15,6 +16,7 @@ app.use(express.json({ limit: '100kb' }))
 app.get('/api/health', (_request, response) => response.json({ status: 'ok' }))
 app.use('/api/meals', mealsRouter)
 app.use('/api/meal-results', mealResultsRouter)
+app.use('/api/predictions', predictionsRouter)
 app.use('/api/menu', menuRouter)
 app.use('/api/holidays', holidaysRouter)
 app.use('/api', historyRouter)

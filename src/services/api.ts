@@ -27,6 +27,27 @@ export type ApiMealResult = {
 }
 export type CreateMealPayload = Omit<ApiMeal, 'id' | 'result' | 'date'> & { date: string }
 export type CreateMealResultPayload = Pick<ApiMealResult, 'mealId' | 'predictedConsumption' | 'recommendedQuantity' | 'preparedQuantity' | 'consumedQuantity'>
+export type ApiPrediction = {
+  predictedConsumption: number
+  recommendedQuantity: number
+  confidence: 'high' | 'medium' | 'low'
+  explanation: string
+  historicalRecordsUsed: number
+}
+export type ApiHistoryRecord = ApiMeal & {
+  weekday: string
+  totalHostelStudents: number
+  isHoliday: boolean
+  isCollegeDay: boolean
+  preparedQuantity: number | null
+  consumedQuantity: number | null
+  predictedDemand: number | null
+  recommendedQuantity: number | null
+  waste: number | null
+  shortage: number | null
+  wastePercentage: number | null
+  predictionError: number | null
+}
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch('/api' + path, {
@@ -43,7 +64,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 
 export const api = {
   getMenu: () => request<ApiMenu[]>('/menu'),
-  getHistory: () => request<Array<ApiMeal & { weekday: string; totalHostelStudents: number; preparedQuantity: number | null; consumedQuantity: number | null; predictedDemand: number | null }>>('/history'),
+  getHistory: () => request<ApiHistoryRecord[]>('/history'),
   getMeals: (limit = 100) => request<ApiMeal[]>('/meals?limit=' + limit),
   createMeal: (meal: CreateMealPayload) => request<ApiMeal>('/meals', {
     method: 'POST',
@@ -52,5 +73,9 @@ export const api = {
   createMealResult: (result: CreateMealResultPayload) => request<ApiMealResult>('/meal-results', {
     method: 'POST',
     body: JSON.stringify(result),
+  }),
+  createPrediction: (mealId: string) => request<ApiPrediction>('/predictions', {
+    method: 'POST',
+    body: JSON.stringify({ mealId }),
   }),
 }

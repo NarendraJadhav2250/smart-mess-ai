@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CalendarDays, CheckCircle2, ClipboardList, GraduationCap, Sparkles, Users } from 'lucide-react'
-import { predictDemand } from '../utils/prediction'
 import { api, type ApiMeal, type ApiMenu } from '../services/api'
 
 type MealName = 'Lunch' | 'Dinner'
@@ -10,9 +9,7 @@ export type MealPlanInput = {
   date: string; weekday: string; meal: MealName; menu: string; totalHostelStudents: number
   expectedStudents: number; dayStatus: DayStatus; event: string; notes: string
 }
-export type MealPlanResult = {
-  mealId: string; mealPlan: MealPlanInput; prediction: ReturnType<typeof predictDemand>
-}
+export type MealPlanResult = { mealId: string; mealPlan: MealPlanInput; prediction?: { predictedDemand: number; recommendedQuantity: number; reasons: string[] } }
 type HistoryRow = Awaited<ReturnType<typeof api.getHistory>>[number]
 
 const localDateString = (date: Date) => [date.getFullYear(), String(date.getMonth() + 1).padStart(2, '0'), String(date.getDate()).padStart(2, '0')].join('-')
@@ -32,17 +29,6 @@ function expectedFromHistory(date: string, meal: MealName, menu: string, rows: H
   const byDay = rows.filter(row => row.day === weekdayFor(date) && row.mealType === meal)
   return average((byDay.length ? byDay : rows).map(row => row.expectedStudents))
 }
-function toPredictionHistory(rows: HistoryRow[]) {
-  return rows.filter((row): row is HistoryRow & { preparedQuantity: number; consumedQuantity: number; predictedDemand: number } =>
-    row.preparedQuantity !== null && row.consumedQuantity !== null && row.predictedDemand !== null,
-  ).map(row => ({
-    date: row.date.slice(0, 10), weekday: row.weekday, meal: row.mealType, menu: row.menu,
-    totalHostelStudents: row.totalHostelStudents, expectedStudents: row.expectedStudents,
-    isCollegeDay: !row.holiday && row.collegeStatus === 'College Day', isHoliday: row.holiday,
-    preparedQuantity: row.preparedQuantity, consumedQuantity: row.consumedQuantity, predictedDemand: row.predictedDemand,
-  }))
-}
-
 export default function MealPlanning() {
   const navigate = useNavigate()
   const initialDate = localDateString(new Date())
@@ -124,13 +110,7 @@ export default function MealPlanning() {
         collegeStatus: dayStatus === 'College Day' ? 'College Day' : 'Non-college Day',
         event: event.trim(), notes: notes.trim(),
       })
-      const prediction = predictDemand({
-        menu, weekday, expectedStudents,
-        isCollegeDay: dayStatus === 'College Day',
-        isHoliday: dayStatus === 'Holiday',
-        history: toPredictionHistory(history),
-      })
-      const result: MealPlanResult = { mealId: savedMeal.id, mealPlan, prediction }
+      const result: MealPlanResult = { mealId: savedMeal.id, mealPlan }
       navigate('/ai-recommendation', { state: result })
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : 'Could not save the meal plan.')

@@ -38,6 +38,10 @@ export const mealResultSchema = z.object({
   consumedQuantity: z.number().int().min(0).max(100000),
 })
 
+export const predictionSchema = z.object({
+  mealId: z.string().trim().min(1, 'Meal ID is required'),
+})
+
 export const menuSchema = z.object({
   day: z.enum(weekdays),
   lunch: z.string().trim().min(1).max(120),
